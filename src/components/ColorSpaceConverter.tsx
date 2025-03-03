@@ -81,13 +81,13 @@ const ColorSpaceConverter = () => {
         const converted = conversionFunction(rgb);
 
         if (colorSpace === "ycbcr") {
-          newImageData.data[i] = (converted.cr * factor.cr) / 100;
-          newImageData.data[i + 1] = (converted.y * factor.y) / 100;
-          newImageData.data[i + 2] = (converted.cb * factor.cb) / 100;
+          newImageData.data[i] = Math.min(255, Math.max(0, (converted.cr * factor.cr) / 100));
+          newImageData.data[i + 1] = Math.min(255, Math.max(0, (converted.y * factor.y) / 100));
+          newImageData.data[i + 2] = Math.min(255, Math.max(0, (converted.cb * factor.cb) / 100));
         } else {
-          newImageData.data[i] = (converted.h / 360) * 255;
-          newImageData.data[i + 1] = converted.s * factor.s * 2.55;
-          newImageData.data[i + 2] = converted.v * factor.v * 2.55;
+          newImageData.data[i] = Math.min(255, Math.max(0, (converted.h / 360) * 255));
+          newImageData.data[i + 1] = Math.min(255, Math.max(0, converted.s * factor.s * 2.55));
+          newImageData.data[i + 2] = Math.min(255, Math.max(0, converted.v * factor.v * 2.55));
         }
         newImageData.data[i + 3] = originalImageData.data[i + 3];
       }
