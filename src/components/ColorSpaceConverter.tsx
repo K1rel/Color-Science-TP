@@ -177,7 +177,12 @@ const ColorSpaceConverter = () => {
     };
   };
 
+<<<<<<< HEAD
   // ---- PROCESSING ----
+=======
+
+  
+>>>>>>> 3fced2a (promeni)
   const processImage = useCallback(
     (colorSpace: "ycbcr" | "hsv") => {
       if (!originalImageData) return;
@@ -207,6 +212,7 @@ const ColorSpaceConverter = () => {
         const b = originalImageData.data[i + 2];
         const alpha = originalImageData.data[i + 3];
 
+<<<<<<< HEAD
         // Convert from RGB
         if (colorSpace === "ycbcr") {
           const { y, cb, cr } = rgbToYCbCr({ r, g, b });
@@ -236,6 +242,19 @@ const ColorSpaceConverter = () => {
           newImageData.data[i + 1] = gOut;
           newImageData.data[i + 2] = bOut;
           newImageData.data[i + 3] = alpha;
+=======
+        
+        if (colorSpace === "ycbcr") {
+          newImageData.data[i] = Math.min(255, Math.max(0, (converted.cr * factor.cr) / 100));
+          console.log(newImageData.data[i]);
+          newImageData.data[i + 1] = Math.min(255, Math.max(0, (converted.y * factor.y) / 100));
+          newImageData.data[i + 2] = Math.min(255, Math.max(0, (converted.cb * factor.cb) / 100));
+        } else {
+          newImageData.data[i] = Math.min(255, Math.max(0, (converted.h / 360) * 255));
+          console.log(newImageData.data[i]);
+          newImageData.data[i + 1] = Math.min(255, Math.max(0, converted.s * factor.s * 2.55));
+          newImageData.data[i + 2] = Math.min(255, Math.max(0, converted.v * factor.v * 2.55));
+>>>>>>> 3fced2a (promeni)
         }
       }
 
