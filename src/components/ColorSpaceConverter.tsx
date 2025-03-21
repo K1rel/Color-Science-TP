@@ -27,6 +27,14 @@ const ColorSpaceConverter = () => {
   const originalCanvasRef = useRef<HTMLCanvasElement>(null);
   const ycbcrCanvasRef = useRef<HTMLCanvasElement>(null);
   const hsvCanvasRef = useRef<HTMLCanvasElement>(null);
+  
+  const yCanalCanvasRef = useRef<HTMLCanvasElement>(null);
+  const cbCanalCanvasRef = useRef<HTMLCanvasElement>(null);
+  const crCanalCanvasRef = useRef<HTMLCanvasElement>(null);
+  
+  const hCanalCanvasRef = useRef<HTMLCanvasElement>(null);
+  const sCanalCanvasRef = useRef<HTMLCanvasElement>(null);
+  const vCanalCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const [imageLoaded, setImageLoaded] = useState(false);
   const [originalImageData, setOriginalImageData] = useState<ImageData | null>(
@@ -34,19 +42,15 @@ const ColorSpaceConverter = () => {
   );
 
   const [adjustments, setAdjustments] = useState<ColorAdjustments>({
-    // 100% = no change, 0% = remove component entirely
     ycbcr: { y: 100, cb: 100, cr: 100 },
     hsv: { h: 100, s: 100, v: 100 },
   });
 
-  // ---- HELPER FUNCTIONS ----
-
-  // Clamp a value to [0..255] and round.
   function clamp(value: number): number {
     return Math.round(Math.max(0, Math.min(255, value)));
   }
 
-  // Convert RGB [0..255] to YCbCr in [0..1], with 0.5 offsets for Cb/Cr.
+
   function rgbToYCbCr(rgb: RGB): YCbCr {
     const r = rgb.r / 255;
     const g = rgb.g / 255;
@@ -57,7 +61,6 @@ const ColorSpaceConverter = () => {
     return { y, cb, cr };
   }
 
-  // Convert YCbCr [0..1] back to RGB [0..255].
   function ycbcrToRgb(y: number, cb: number, cr: number): RGB {
     const R = (y + 1.402 * (cr - 0.5)) * 255;
     const G =
@@ -73,7 +76,6 @@ const ColorSpaceConverter = () => {
     };
   }
 
-  // Convert RGB [0..255] to HSV (h in [0..360], s,v in [0..1]).
   function rgbToHSV(rgb: RGB): HSV {
     const r = rgb.r / 255;
     const g = rgb.g / 255;
@@ -104,9 +106,8 @@ const ColorSpaceConverter = () => {
     return { h, s, v };
   }
 
-  // Convert HSV (h in [0..360], s,v in [0..1]) back to RGB [0..255].
   function hsvToRgb(h: number, s: number, v: number): RGB {
-    const c = v * s; // chroma
+    const c = v * s; 
     const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
     const m = v - c;
 
@@ -135,7 +136,7 @@ const ColorSpaceConverter = () => {
       gP = 0;
       bP = c;
     } else {
-      // 300 <= h < 360
+     
       rP = c;
       gP = 0;
       bP = x;
@@ -152,7 +153,6 @@ const ColorSpaceConverter = () => {
     };
   }
 
-  // ---- IMAGE UPLOAD ----
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -177,12 +177,6 @@ const ColorSpaceConverter = () => {
     };
   };
 
-<<<<<<< HEAD
-  // ---- PROCESSING ----
-=======
-
-  
->>>>>>> 3fced2a (promeni)
   const processImage = useCallback(
     (colorSpace: "ycbcr" | "hsv") => {
       if (!originalImageData) return;
@@ -212,15 +206,12 @@ const ColorSpaceConverter = () => {
         const b = originalImageData.data[i + 2];
         const alpha = originalImageData.data[i + 3];
 
-<<<<<<< HEAD
-        // Convert from RGB
         if (colorSpace === "ycbcr") {
           const { y, cb, cr } = rgbToYCbCr({ r, g, b });
-          // factor.y, factor.cb, factor.cr range [0..100]
-          const yAdj = y * (factor.y / 100);
-          // shift cb/cr around 0.5
-          const cbAdj = 0.5 + (cb - 0.5) * (factor.cb / 100);
-          const crAdj = 0.5 + (cr - 0.5) * (factor.cr / 100);
+          
+          const yAdj = factor.y > 0 ? y * (factor.y / 100) : 0.5;
+          const cbAdj = factor.cb > 0 ? 0.5 + (cb - 0.5) * (factor.cb / 100) : 0.5;
+          const crAdj = factor.cr > 0 ? 0.5 + (cr - 0.5) * (factor.cr / 100) : 0.5;
 
           const { r: rOut, g: gOut, b: bOut } = ycbcrToRgb(yAdj, cbAdj, crAdj);
 
@@ -229,12 +220,12 @@ const ColorSpaceConverter = () => {
           newImageData.data[i + 2] = bOut;
           newImageData.data[i + 3] = alpha;
         } else {
-          // HSV
+       
           const { h, s, v } = rgbToHSV({ r, g, b });
-          // factor.h, factor.s, factor.v range [0..100]
-          const hAdj = h * (factor.h / 100);
-          const sAdj = s * (factor.s / 100);
-          const vAdj = v * (factor.v / 100);
+          
+          const hAdj = factor.h > 0 ? h * (factor.h / 100) : 0;
+          const sAdj = factor.s > 0 ? s * (factor.s / 100) : 0;
+          const vAdj = factor.v > 0 ? v * (factor.v / 100) : 1;
 
           const { r: rOut, g: gOut, b: bOut } = hsvToRgb(hAdj, sAdj, vAdj);
 
@@ -242,19 +233,6 @@ const ColorSpaceConverter = () => {
           newImageData.data[i + 1] = gOut;
           newImageData.data[i + 2] = bOut;
           newImageData.data[i + 3] = alpha;
-=======
-        
-        if (colorSpace === "ycbcr") {
-          newImageData.data[i] = Math.min(255, Math.max(0, (converted.cr * factor.cr) / 100));
-          console.log(newImageData.data[i]);
-          newImageData.data[i + 1] = Math.min(255, Math.max(0, (converted.y * factor.y) / 100));
-          newImageData.data[i + 2] = Math.min(255, Math.max(0, (converted.cb * factor.cb) / 100));
-        } else {
-          newImageData.data[i] = Math.min(255, Math.max(0, (converted.h / 360) * 255));
-          console.log(newImageData.data[i]);
-          newImageData.data[i + 1] = Math.min(255, Math.max(0, converted.s * factor.s * 2.55));
-          newImageData.data[i + 2] = Math.min(255, Math.max(0, converted.v * factor.v * 2.55));
->>>>>>> 3fced2a (promeni)
         }
       }
 
@@ -263,12 +241,112 @@ const ColorSpaceConverter = () => {
     [originalImageData, adjustments]
   );
 
+  const processComponentCanvases = useCallback(() => {
+    if (!originalImageData) return;
+
+    const canvasRefs = {
+      y: yCanalCanvasRef.current,
+      cb: cbCanalCanvasRef.current,
+      cr: crCanalCanvasRef.current,
+      h: hCanalCanvasRef.current,
+      s: sCanalCanvasRef.current,
+      v: vCanalCanvasRef.current
+    };
+    
+    const contexts: Record<string, CanvasRenderingContext2D | null> = {};
+    Object.entries(canvasRefs).forEach(([key, canvas]) => {
+      if (!canvas) return;
+      
+      canvas.width = originalImageData.width;
+      canvas.height = originalImageData.height;
+      contexts[key] = canvas.getContext("2d");
+      
+      if (contexts[key]) {
+        const imageData = contexts[key]!.createImageData(
+          originalImageData.width,
+          originalImageData.height
+        );
+        contexts[key]!.putImageData(imageData, 0, 0);
+      }
+    });
+
+    const imageDataObjects: Record<string, ImageData> = {};
+    Object.entries(contexts).forEach(([key, ctx]) => {
+      if (!ctx) return;
+      imageDataObjects[key] = ctx.createImageData(
+        originalImageData.width,
+        originalImageData.height
+      );
+    });
+
+    for (let i = 0; i < originalImageData.data.length; i += 4) {
+      const r = originalImageData.data[i];
+      const g = originalImageData.data[i + 1];
+      const b = originalImageData.data[i + 2];
+      const alpha = originalImageData.data[i + 3];
+   
+      const { y, cb, cr } = rgbToYCbCr({ r, g, b });
+      
+      const yOnly = ycbcrToRgb(y, 0.5, 0.5);
+      imageDataObjects.y.data[i] = yOnly.r;
+      imageDataObjects.y.data[i + 1] = yOnly.g;
+      imageDataObjects.y.data[i + 2] = yOnly.b;
+      imageDataObjects.y.data[i + 3] = alpha;
+      
+      
+      const cbOnly = ycbcrToRgb(0.5, cb, 0.5);
+      imageDataObjects.cb.data[i] = cbOnly.r;
+      imageDataObjects.cb.data[i + 1] = cbOnly.g;
+      imageDataObjects.cb.data[i + 2] = cbOnly.b;
+      imageDataObjects.cb.data[i + 3] = alpha;
+      
+     
+      const crOnly = ycbcrToRgb(0.5, 0.5, cr);
+      imageDataObjects.cr.data[i] = crOnly.r;
+      imageDataObjects.cr.data[i + 1] = crOnly.g;
+      imageDataObjects.cr.data[i + 2] = crOnly.b;
+      imageDataObjects.cr.data[i + 3] = alpha;
+
+      
+      const { h, s, v } = rgbToHSV({ r, g, b });
+      
+     
+      const hOnly = hsvToRgb(h, 1, 1);
+      imageDataObjects.h.data[i] = hOnly.r;
+      imageDataObjects.h.data[i + 1] = hOnly.g;
+      imageDataObjects.h.data[i + 2] = hOnly.b;
+      imageDataObjects.h.data[i + 3] = alpha;
+      
+   
+      const sOnly = hsvToRgb(0, s, 1); 
+      imageDataObjects.s.data[i] = sOnly.r;
+      imageDataObjects.s.data[i + 1] = sOnly.g;
+      imageDataObjects.s.data[i + 2] = sOnly.b;
+      imageDataObjects.s.data[i + 3] = alpha;
+      
+      
+      const vOnly = hsvToRgb(0, 0, v);
+      imageDataObjects.v.data[i] = vOnly.r;
+      imageDataObjects.v.data[i + 1] = vOnly.g;
+      imageDataObjects.v.data[i + 2] = vOnly.b;
+      imageDataObjects.v.data[i + 3] = alpha;
+    }
+
+   
+    Object.entries(contexts).forEach(([key, ctx]) => {
+      if (!ctx) return;
+      ctx.putImageData(imageDataObjects[key], 0, 0);
+    });
+    
+  }, [originalImageData]);
+
   useEffect(() => {
     processImage("ycbcr");
     processImage("hsv");
-  }, [processImage]);
+    processComponentCanvases();
+  }, [processImage, processComponentCanvases]);
 
-  // ---- RENDER ----
+  
   return (
     <div className="w-full max-w-6xl mx-auto p-4">
       <div className="mb-6">
@@ -280,8 +358,8 @@ const ColorSpaceConverter = () => {
         />
       </div>
 
-      <div className="flex flex-wrap gap-8">
-        {/* Original Canvas */}
+      <div className="flex flex-wrap gap-8 mb-8">
+       
         <div className="flex-1 min-w-64">
           <h3 className="text-xl font-bold mb-2">Original</h3>
           <canvas
@@ -290,11 +368,11 @@ const ColorSpaceConverter = () => {
           />
         </div>
 
-        {/* YCbCr Canvas and Sliders */}
+        
         <div className="flex-1 min-w-64">
           <h3 className="text-xl font-bold mb-2">YCbCr</h3>
           <div className="mb-4">
-            {/* Y */}
+            
             <div className="mb-2 flex items-center">
               <div className="w-28 flex justify-between">
                 <span className="text-sm font-medium">Y:</span>
@@ -316,7 +394,7 @@ const ColorSpaceConverter = () => {
                 className="w-full ml-2"
               />
             </div>
-            {/* Cb */}
+       
             <div className="mb-2 flex items-center">
               <div className="w-28 flex justify-between">
                 <span className="text-sm font-medium">Cb:</span>
@@ -338,7 +416,7 @@ const ColorSpaceConverter = () => {
                 className="w-full ml-2"
               />
             </div>
-            {/* Cr */}
+      
             <div className="mb-2 flex items-center">
               <div className="w-28 flex justify-between">
                 <span className="text-sm font-medium">Cr:</span>
@@ -367,7 +445,7 @@ const ColorSpaceConverter = () => {
           />
         </div>
 
-        {/* HSV Canvas and Sliders */}
+     
         <div className="flex-1 min-w-64">
           <h3 className="text-xl font-bold mb-2">HSV</h3>
           <div className="mb-4">
@@ -393,7 +471,7 @@ const ColorSpaceConverter = () => {
                 className="w-full ml-2"
               />
             </div>
-            {/* S */}
+          
             <div className="mb-2 flex items-center">
               <div className="w-28 flex justify-between">
                 <span className="text-sm font-medium">S:</span>
@@ -415,7 +493,7 @@ const ColorSpaceConverter = () => {
                 className="w-full ml-2"
               />
             </div>
-            {/* V */}
+          
             <div className="mb-2 flex items-center">
               <div className="w-28 flex justify-between">
                 <span className="text-sm font-medium">V:</span>
@@ -440,6 +518,68 @@ const ColorSpaceConverter = () => {
           </div>
           <canvas
             ref={hsvCanvasRef}
+            className="border border-gray-300 w-full h-auto"
+          />
+        </div>
+      </div>
+
+  
+      <h2 className="text-2xl font-bold mb-4 mt-8">YCbCr Individual Components</h2>
+      <div className="flex flex-wrap gap-8 mb-8">
+        <div className="flex-1 min-w-64">
+          <h3 className="text-xl font-bold mb-2">Y Only (Luminance)</h3>
+          <p className="text-sm mb-2">Shows only luminance information (grayscale)</p>
+          <canvas
+            ref={yCanalCanvasRef}
+            className="border border-gray-300 w-full h-auto"
+          />
+        </div>
+        
+        <div className="flex-1 min-w-64">
+          <h3 className="text-xl font-bold mb-2">Cb Only (Blue-Yellow)</h3>
+          <p className="text-sm mb-2">Shows only blue-yellow chrominance</p>
+          <canvas
+            ref={cbCanalCanvasRef}
+            className="border border-gray-300 w-full h-auto"
+          />
+        </div>
+        
+        <div className="flex-1 min-w-64">
+          <h3 className="text-xl font-bold mb-2">Cr Only (Red-Green)</h3>
+          <p className="text-sm mb-2">Shows only red-green chrominance</p>
+          <canvas
+            ref={crCanalCanvasRef}
+            className="border border-gray-300 w-full h-auto"
+          />
+        </div>
+      </div>
+      
+    
+      <h2 className="text-2xl font-bold mb-4 mt-8">HSV Individual Components</h2>
+      <div className="flex flex-wrap gap-8">
+        <div className="flex-1 min-w-64">
+          <h3 className="text-xl font-bold mb-2">H Only (Hue)</h3>
+          <p className="text-sm mb-2">Shows only color information (full saturation)</p>
+          <canvas
+            ref={hCanalCanvasRef}
+            className="border border-gray-300 w-full h-auto"
+          />
+        </div>
+        
+        <div className="flex-1 min-w-64">
+          <h3 className="text-xl font-bold mb-2">S Only (Saturation)</h3>
+          <p className="text-sm mb-2">Shows only saturation levels as red</p>
+          <canvas
+            ref={sCanalCanvasRef}
+            className="border border-gray-300 w-full h-auto"
+          />
+        </div>
+        
+        <div className="flex-1 min-w-64">
+          <h3 className="text-xl font-bold mb-2">V Only (Value/Brightness)</h3>
+          <p className="text-sm mb-2">Shows only brightness information (grayscale)</p>
+          <canvas
+            ref={vCanalCanvasRef}
             className="border border-gray-300 w-full h-auto"
           />
         </div>
