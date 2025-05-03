@@ -1,12 +1,17 @@
+import './index.css'
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import ColorSpaceConverter from './src/components/ColorSpaceConverter';
+import Navbar from './src/components/Navbar';
+
 
 const App = () => {
   return (
     <div>
-      <h1>Color Space Converter</h1>
-      <ColorSpaceConverter />
+      <Navbar />
+      <main className='p-4'>
+        <ColorSpaceConverter />
+      </main>
     </div>
   );
 };

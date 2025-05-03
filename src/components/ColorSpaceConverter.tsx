@@ -340,11 +340,24 @@ const ColorSpaceConverter = () => {
     
   }, [originalImageData]);
 
+  // 1) Only run this once per new image.
   useEffect(() => {
-    processImage("ycbcr");
-    processImage("hsv");
+    if (!originalImageData) return;
     processComponentCanvases();
-  }, [processImage, processComponentCanvases]);
+  }, [originalImageData]);
+
+
+  // 2) Throttle slider‐driven redraws via rAF,
+  //    and stop re-generating the component canvases on every slider move.
+  useEffect(() => {
+    if (!originalImageData) return;
+    // schedule one draw for this animation frame
+    const id = requestAnimationFrame(() => {
+      processImage("ycbcr");
+      processImage("hsv");
+    });
+    return () => cancelAnimationFrame(id);
+  }, [adjustments, originalImageData]);
 
   
   return (
