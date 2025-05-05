@@ -120,96 +120,238 @@ const ColorSpaceConverter = () => {
 
   // Render
   return (
-    <div className="w-full max-w-6xl mx-auto p-4">
-      <div className="mb-6">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="p-2 border rounded mb-4"
-        />
-      </div>
+    <>
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-      <div className="flex flex-wrap gap-8 mb-8">
-        <div className="flex-1 min-w-64">
-          <h3 className="text-xl font-bold mb-2">Original</h3>
-          <canvas
-            ref={originalCanvasRef}
-            className="border border-gray-300 w-full h-auto"
-          />
+          .converter-container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 1rem;
+            background: #1a1b1e;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+          }
+
+          .file-upload-container {
+            margin-bottom: 1.5rem;
+            text-align: center;
+          }
+
+          .file-upload-label {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #2d2e32;
+            border: 2px dashed #3b82f6;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #e2e8f0;
+            font-weight: 500;
+          }
+
+          .file-upload-label:hover {
+            border-color: #60a5fa;
+            color: #60a5fa;
+            background: #2d2e32;
+            transform: translateY(-1px);
+          }
+
+          .file-upload-input {
+            display: none;
+          }
+
+          .main-images-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+          }
+
+          .image-section {
+            background: #2d2e32;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+          }
+
+          .image-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.3);
+          }
+
+          .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3b82f6;
+          }
+
+          .canvas-container {
+            margin-bottom: 1rem;
+          }
+
+          .canvas-container canvas {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            background: #1a1b1e;
+          }
+
+          .components-section {
+            margin-top: 2rem;
+          }
+
+          .components-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3b82f6;
+          }
+
+          .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+          }
+
+          .upload-prompt {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: #2d2e32;
+            border-radius: 0.75rem;
+            text-align: center;
+            color: #e2e8f0;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+          }
+
+          .upload-prompt:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.3);
+          }
+
+          @media (max-width: 768px) {
+            .main-images-container {
+              grid-template-columns: 1fr;
+            }
+            
+            .components-grid {
+              grid-template-columns: 1fr;
+            }
+          }
+        `}
+      </style>
+      <div className="converter-container">
+        <div className="file-upload-container">
+          <label className="file-upload-label">
+            Choose an image to upload
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="file-upload-input"
+            />
+          </label>
         </div>
 
-        <div className="flex-1 min-w-64">
-          <h3 className="text-xl font-bold mb-2">YCbCr</h3>
-          <ColorSpaceAdjustments
-            type="ycbcr"
-            values={adjustments.ycbcr}
-            onChange={handleAdjustmentChange}
-          />
-          <canvas
-            ref={ycbcrCanvasRef}
-            className="border border-gray-300 w-full h-auto"
-          />
+        <div className="main-images-container">
+          <div className="image-section">
+            <h3 className="section-title">Original</h3>
+            <div className="canvas-container">
+              <canvas
+                ref={originalCanvasRef}
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+          </div>
+
+          <div className="image-section">
+            <h3 className="section-title">YCbCr</h3>
+            <div className="canvas-container">
+              <canvas
+                ref={ycbcrCanvasRef}
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+            <ColorSpaceAdjustments
+              type="ycbcr"
+              values={adjustments.ycbcr}
+              onChange={handleAdjustmentChange}
+            />
+          </div>
+
+          <div className="image-section">
+            <h3 className="section-title">HSV</h3>
+            <div className="canvas-container">
+              <canvas
+                ref={hsvCanvasRef}
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+            <ColorSpaceAdjustments
+              type="hsv"
+              values={adjustments.hsv}
+              onChange={handleAdjustmentChange}
+            />
+          </div>
         </div>
 
-        <div className="flex-1 min-w-64">
-          <h3 className="text-xl font-bold mb-2">HSV</h3>
-          <ColorSpaceAdjustments
-            type="hsv"
-            values={adjustments.hsv}
-            onChange={handleAdjustmentChange}
-          />
-          <canvas
-            ref={hsvCanvasRef}
-            className="border border-gray-300 w-full h-auto"
-          />
+        <div className="components-section">
+          <h2 className="components-title">YCbCr Individual Components</h2>
+          <div className="components-grid">
+            <ColorChannel
+              title="Y Only (Luminance)"
+              description="Shows only luminance information (grayscale)"
+              canvasRef={yCanalCanvasRef}
+            />
+            <ColorChannel
+              title="Cb Only (Blue-Yellow)"
+              description="Shows only blue-yellow chrominance"
+              canvasRef={cbCanalCanvasRef}
+            />
+            <ColorChannel
+              title="Cr Only (Red-Green)"
+              description="Shows only red-green chrominance"
+              canvasRef={crCanalCanvasRef}
+            />
+          </div>
+
+          <h2 className="components-title">HSV Individual Components</h2>
+          <div className="components-grid">
+            <ColorChannel
+              title="H Only (Hue)"
+              description="Shows only color information (full saturation)"
+              canvasRef={hCanalCanvasRef}
+            />
+            <ColorChannel
+              title="S Only (Saturation)"
+              description="Shows only saturation levels as red"
+              canvasRef={sCanalCanvasRef}
+            />
+            <ColorChannel
+              title="V Only (Value/Brightness)"
+              description="Shows only brightness information (grayscale)"
+              canvasRef={vCanalCanvasRef}
+            />
+          </div>
         </div>
-      </div>
 
-      <h2 className="text-2xl font-bold mb-4 mt-8">YCbCr Individual Components</h2>
-      <div className="flex flex-wrap gap-8 mb-8">
-        <ColorChannel
-          title="Y Only (Luminance)"
-          description="Shows only luminance information (grayscale)"
-          canvasRef={yCanalCanvasRef}
-        />
-        <ColorChannel
-          title="Cb Only (Blue-Yellow)"
-          description="Shows only blue-yellow chrominance"
-          canvasRef={cbCanalCanvasRef}
-        />
-        <ColorChannel
-          title="Cr Only (Red-Green)"
-          description="Shows only red-green chrominance"
-          canvasRef={crCanalCanvasRef}
-        />
+        {!imageLoaded && (
+          <div className="upload-prompt">
+            Please upload an image to begin
+          </div>
+        )}
       </div>
-
-      <h2 className="text-2xl font-bold mb-4 mt-8">HSV Individual Components</h2>
-      <div className="flex flex-wrap gap-8">
-        <ColorChannel
-          title="H Only (Hue)"
-          description="Shows only color information (full saturation)"
-          canvasRef={hCanalCanvasRef}
-        />
-        <ColorChannel
-          title="S Only (Saturation)"
-          description="Shows only saturation levels as red"
-          canvasRef={sCanalCanvasRef}
-        />
-        <ColorChannel
-          title="V Only (Value/Brightness)"
-          description="Shows only brightness information (grayscale)"
-          canvasRef={vCanalCanvasRef}
-        />
-      </div>
-
-      {!imageLoaded && (
-        <div className="mt-8 p-4 bg-gray-100 rounded text-center">
-          Please upload an image to begin
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 
