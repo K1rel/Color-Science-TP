@@ -18,29 +18,32 @@ const ColorChannel: React.FC<ColorChannelProps> = ({
           .color-channel {
             flex: 1;
             min-width: 16rem;
-            background: white;
+            background: #1a1b1e;
             border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
             padding: 1.5rem;
             margin: 1rem;
-            transition: box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            border: 1px solid #2d2e32;
           }
           
           .color-channel:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+            border-color: #3b82f6;
           }
           
           .channel-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1f2937;
+            color: #e2e8f0;
             margin-bottom: 0.75rem;
             letter-spacing: -0.025em;
           }
           
           .channel-description {
             font-size: 0.875rem;
-            color: #4b5563;
+            color: #cbd5e0;
             margin-bottom: 1rem;
             line-height: 1.5;
           }
@@ -49,13 +52,14 @@ const ColorChannel: React.FC<ColorChannelProps> = ({
             position: relative;
             border-radius: 0.5rem;
             overflow: hidden;
-            border: 2px solid #e5e7eb;
+            border: 2px solid #3b82f6;
             transition: all 0.3s ease;
+            background: #0f1012;
           }
           
           .canvas-container:hover {
-            border-color: #3b82f6;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
           }
           
           .canvas-container canvas {
@@ -67,7 +71,7 @@ const ColorChannel: React.FC<ColorChannelProps> = ({
           .canvas-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.05), transparent);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.1), transparent);
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;

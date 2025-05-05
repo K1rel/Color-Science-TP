@@ -125,14 +125,37 @@ const ColorSpaceConverter = () => {
         {`
           @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+
+          body {
+            margin: 0;
+            padding: 0;
+            background: #1a1b1e;
+            min-height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
+          }
+
+          #root {
+            min-height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+          }
+
           .converter-container {
-            width: 100%;
-            max-width: 100%;
+            width: 100vw;
+            max-width: 100vw;
             margin: 0;
             padding: 1rem;
             background: #1a1b1e;
             min-height: 100vh;
             font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
           }
 
           .file-upload-container {

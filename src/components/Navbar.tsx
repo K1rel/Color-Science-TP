@@ -56,6 +56,7 @@ const Navbar: React.FC = () => {
             display: flex;
             gap: 2rem;
             align-items: center;
+            list-style: none;
           }
 
           .nav-link {
@@ -65,6 +66,16 @@ const Navbar: React.FC = () => {
             border-radius: 0.5rem;
             transition: all 0.3s ease;
             font-weight: 500;
+            position: relative;
+          }
+
+          .nav-link::before {
+            content: "•";
+            position: absolute;
+            left: -1rem;
+            color: #3b82f6;
+            opacity: 0;
+            transition: opacity 0.3s ease;
           }
 
           .nav-link:hover {
@@ -73,11 +84,18 @@ const Navbar: React.FC = () => {
             transform: translateY(-1px);
           }
 
+          .nav-link:hover::before {
+            opacity: 1;
+          }
+
           .nav-link.active {
             color: #3b82f6;
             background: #2d2e32;
           }
 
+          .nav-link.active::before {
+            opacity: 1;
+          }
 
           @media (max-width: 768px) {
             .nav-links {
@@ -120,7 +138,6 @@ const Navbar: React.FC = () => {
               </li>
             </ul>
           </div>
-          
         </div>
       </nav>
     </>

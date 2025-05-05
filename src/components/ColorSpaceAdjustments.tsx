@@ -28,25 +28,27 @@ const ColorSpaceAdjustments: React.FC<ColorSpaceAdjustmentsProps> = ({
       <style>
         {`
           .adjustments-container {
-            background: white;
+            background: #1a1b1e;
             border-radius: 0.75rem;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
+            border: 1px solid #2d2e32;
           }
 
           .adjustments-container:hover {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+            border-color: #3b82f6;
           }
 
           .adjustments-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1F2937;
             margin-bottom: 1.25rem;
             padding-bottom: 0.75rem;
-            border-bottom: 2px solid #E5E7EB;
+            border-bottom: 2px solid #3b82f6;
           }
 
           .sliders-group {
@@ -55,12 +57,30 @@ const ColorSpaceAdjustments: React.FC<ColorSpaceAdjustmentsProps> = ({
             gap: 0.75rem;
           }
 
+          .ycbcr {
+            background: linear-gradient(to bottom right, #1a1b1e, #1e293b);
+          }
+
+          .hsv {
+            background: linear-gradient(to bottom right, #1a1b1e, #312e81);
+          }
+
           .ycbcr .adjustments-title {
-            color: #2563EB;
+            color: #93c5fd;
+            text-shadow: 0 0 10px rgba(147, 197, 253, 0.2);
           }
 
           .hsv .adjustments-title {
-            color: #7C3AED;
+            color: #c4b5fd;
+            text-shadow: 0 0 10px rgba(196, 181, 253, 0.2);
+          }
+
+          .ycbcr .sliders-group {
+            color: #bfdbfe;
+          }
+
+          .hsv .sliders-group {
+            color: #ddd6fe;
           }
         `}
       </style>

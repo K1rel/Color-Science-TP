@@ -26,11 +26,11 @@ const ColorSlider: React.FC<ColorSliderProps> = ({
             gap: 1rem;
             padding: 0.5rem;
             border-radius: 0.5rem;
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
           }
 
           .slider-container:hover {
-            background-color: rgba(0, 0, 0, 0.02);
+            background-color: rgba(255, 255, 255, 0.05);
           }
 
           .label-container {
@@ -43,13 +43,13 @@ const ColorSlider: React.FC<ColorSliderProps> = ({
           .slider-label {
             font-size: 0.875rem;
             font-weight: 500;
-            color: #374151;
+            color: #e2e8f0;
           }
 
           .slider-value {
             font-size: 0.875rem;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            color: #6B7280;
+            color: #93c5fd;
             min-width: 3rem;
             text-align: right;
           }
@@ -58,14 +58,14 @@ const ColorSlider: React.FC<ColorSliderProps> = ({
             flex: 1;
             -webkit-appearance: none;
             height: 6px;
-            background: #E5E7EB;
+            background: #374151;
             border-radius: 3px;
             outline: none;
-            transition: background 0.2s ease;
+            transition: all 0.2s ease;
           }
 
           .slider-input:hover {
-            background: #D1D5DB;
+            background: #4B5563;
           }
 
           .slider-input::-webkit-slider-thumb {
@@ -77,12 +77,13 @@ const ColorSlider: React.FC<ColorSliderProps> = ({
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
           }
 
           .slider-input::-webkit-slider-thumb:hover {
             transform: scale(1.1);
-            background: #2563EB;
+            background: #60A5FA;
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2);
           }
 
           .slider-input::-moz-range-thumb {
@@ -93,12 +94,13 @@ const ColorSlider: React.FC<ColorSliderProps> = ({
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
           }
 
           .slider-input::-moz-range-thumb:hover {
             transform: scale(1.1);
-            background: #2563EB;
+            background: #60A5FA;
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2);
           }
 
           .slider-input:focus {
@@ -106,11 +108,11 @@ const ColorSlider: React.FC<ColorSliderProps> = ({
           }
 
           .slider-input:focus::-webkit-slider-thumb {
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
           }
 
           .slider-input:focus::-moz-range-thumb {
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
           }
         `}
       </style>
